@@ -11,8 +11,9 @@
       spring.application.name=loggrab
       server.port=7231
       logging.level.org.apache.kafka.clients.** = info
-      io.github.clockworm.middle.loggrab.kafka.servers=xxx.xxx.xxx.xxx:9092
-      io.github.clockworm.middle.loggrab.zook.servers=xxx.xxx.xxx.xxx:2181
+      io.github.clockworm.middle.loggrab.log-path=/data/kafka/logs           #日志收集存放的路径
+      io.github.clockworm.middle.loggrab.kafka.servers=xxx.xxx.xxx.xxx:9092  #kafka地址
+      io.github.clockworm.middle.loggrab.zook.servers=xxx.xxx.xxx.xxx:2181   #zookeeper地址
 #### 第三步:
 ###### 进入项目logback-loggrab目录下,执行编译打包命令:
         mvn clean -Dmaven.test.skip=true install package
