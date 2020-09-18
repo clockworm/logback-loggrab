@@ -14,7 +14,7 @@
 ###### 进入项目logback-loggrab目录下,执行编译打包命令:
         mvn clean -Dmaven.test.skip=true install package
 ### 第四步:
-######   集成完毕,启动项目
+######   配置完毕,启动项目
         java -jar logback-loggrab.jar
 ### 第五步:
 ######   进入目录查看其它服务日志是否被收集到该服务器上
