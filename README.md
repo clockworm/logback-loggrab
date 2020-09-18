@@ -2,7 +2,7 @@
 日志收集服务,独立部署。一键启动。即下即用,简单配置。
 ##### 温馨提示:  使用前请确认日志发送的服务使用logback-kafka组件
 
-# 使用方法详见如下:
+# 部署指南如下:
 ### 第一步:
 ###### 克隆项目到本地:
       git clone https://github.com/clockworm/logback-loggrab.git
