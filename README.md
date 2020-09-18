@@ -8,9 +8,6 @@
       git clone https://github.com/clockworm/logback-loggrab.git
 ### 第二步:
 ######   进入项目修改application.properties修改kafka和zookeeper等配置地址:
-      spring.application.name=loggrab
-      server.port=7231
-      logging.level.org.apache.kafka.clients.** = info
       io.github.clockworm.middle.loggrab.log-path=/data/kafka/logs           #日志收集存放的路径
       io.github.clockworm.middle.loggrab.kafka.servers=xxx.xxx.xxx.xxx:9092  #kafka地址
       io.github.clockworm.middle.loggrab.zook.servers=xxx.xxx.xxx.xxx:2181   #zookeeper地址
