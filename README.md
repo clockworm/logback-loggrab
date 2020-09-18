@@ -7,7 +7,7 @@
 ###### 克隆项目到本地:
       git clone https://github.com/clockworm/logback-loggrab.git
 ### 第二步:
-######   application.properties修改kafka和zookeeper配置地址:
+######   进入项目修改application.properties修改kafka和zookeeper配置地址:
        io.github.clockworm.middle.loggrab.kafka.servers=xxx.xxx.xxx.xxx:9092
        io.github.clockworm.middle.loggrab.zook.servers=xxx.xxx.xxx.xxx:2181
 #### 第三步:
