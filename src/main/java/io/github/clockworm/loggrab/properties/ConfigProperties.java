@@ -9,6 +9,7 @@ import lombok.Data;
 @Component
 @Data
 public class ConfigProperties {
+	private String logPath;
 	private KafkaProperties kafka;
 	private ZookeeperProperties zook;
 }
