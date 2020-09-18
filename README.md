@@ -6,7 +6,7 @@
 ###### 克隆项目到本地:
       git clone https://github.com/clockworm/logback-loggrab.git
 #### 第二步:
-###### 进入项目目录,执行编译打包:
+###### 进入项目logback-loggrab目录下,执行编译打包命令:
         mvn clean -Dmaven.test.skip=true install package
 ######   通过maven管理查看源码打开logback-kafka包的logback-kafka.xml配置文件:
          Maven Dependencies
