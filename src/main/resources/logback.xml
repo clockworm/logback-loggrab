@@ -47,7 +47,7 @@
 
 	<!-- 系统默认日志输出 -->
 	<root level="INFO">
-<!-- 		<appender-ref ref="STDOUT" /> -->
+		<appender-ref ref="STDOUT" />
 		<appender-ref ref="INFO" />
 		<appender-ref ref="ERROR" />
 	</root>

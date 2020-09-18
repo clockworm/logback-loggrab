@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ZookeeperProperties {
 	private String servers;
-	private String listenStartWith;
+	private String listenStartWith = "io_github_clockworm";
 }
