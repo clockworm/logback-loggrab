@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.clockworm</groupId>
 	<artifactId>logback-loggrab</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.5</version>
 	<name>logback-loggrab</name>
 	<description>分布式日志中间件</description>
 
