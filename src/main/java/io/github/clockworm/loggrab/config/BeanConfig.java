@@ -1,43 +1,53 @@
-package io.github.clockworm.loggrab.config;
+package io.github.clockworm.loggrab.bean;
 
-import java.util.concurrent.CountDownLatch;
+import java.time.Duration;
+import java.util.Arrays;
 
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooKeeper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-import io.github.clockworm.loggrab.properties.ConfigProperties;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import io.github.clockworm.loggrab.factory.KafkaConsumerFactory;
+import io.github.clockworm.loggrab.factory.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
-
-@Configuration
 @Slf4j
-public class BeanConfig {
-	
-	@Autowired
-	private ConfigProperties configProperties;
+public class KConsumer extends Thread{
+	private final String topic;
+	private final Consumer<String, String> consumer;
 
-	@Bean(name = "zkClient")
-	public ZooKeeper zkClient() {
-		ZooKeeper zooKeeper = null;
+	public KConsumer(String topic, String hostServer) {
+		this.topic = topic;
+		this.consumer = KafkaConsumerFactory.getConsumer(hostServer);
+	}
+
+	@Override
+	public void run() {
 		try {
-			final CountDownLatch countDownLatch = new CountDownLatch(1);
-			zooKeeper = new ZooKeeper(configProperties.getZook().getServers(), 3000, new Watcher() {
-				@Override
-				public void process(WatchedEvent event) {
-					if (Event.KeeperState.SyncConnected == event.getState()) {
-						countDownLatch.countDown();
-					}
+			consumer.subscribe(Arrays.asList(topic));
+			String[] split = topic.split("_");
+			Logger logger = LoggerFactory.getLogger(split[3], split[4]);
+			log.info("准备收集项目组{}服务{}的日志",split[3], split[4]);
+			while (true) {
+				ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(200));
+				for (ConsumerRecord<String, String> record : records) {
+					logHandler(record, logger);
 				}
-			});
-			countDownLatch.await();
-			log.info("初始化ZooKeeper连接状态:{}", zooKeeper.getState());
-		} catch (Exception e) {
-			log.error("初始化ZooKeeper连接异常:{}", e);
+			}
+		} finally {
+			consumer.close();
 		}
-		return zooKeeper;
+	}
+
+	private void logHandler(ConsumerRecord<?, ?> record, Logger log) {
+		String logLevel = record.key().toString();
+		String logMessage = record.value().toString();
+		if (Level.INFO.toString().equals(logLevel)) {
+			log.info(logMessage);
+		} else {
+			log.error(logMessage);
+		}
 	}
 
 }
