@@ -16,7 +16,11 @@
         mvn clean -Dmaven.test.skip=true install package
 ### 第四步:
 ######  打包完毕进入target目录,执行启动命令
+<<<<<<< HEAD
         java -jar logback-loggrab-0.0.5.jar
+=======
+        java -jar logback-loggrab-0.0.4.jar
+>>>>>>> ffb9a4bbe1a07426a3d1a720ce09dace504d8836
 ### 第五步:
 ######   进入目录查看其它服务日志是否被收集到该服务器上
          cd /data/kafka/logs
