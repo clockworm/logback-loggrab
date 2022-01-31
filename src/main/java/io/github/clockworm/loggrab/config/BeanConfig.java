@@ -1,53 +1,30 @@
-package io.github.clockworm.loggrab.bean;
+package io.github.clockworm.loggrab.config;
 
-import java.time.Duration;
-import java.util.Arrays;
-
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import io.github.clockworm.loggrab.factory.KafkaConsumerFactory;
-import io.github.clockworm.loggrab.factory.LoggerFactory;
+import io.github.clockworm.loggrab.factory.ZookFactory;
+import io.github.clockworm.loggrab.properties.ConfigProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.zookeeper.ZooKeeper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 @Slf4j
-public class KConsumer extends Thread{
-	private final String topic;
-	private final Consumer<String, String> consumer;
+public class BeanConfig {
 
-	public KConsumer(String topic, String hostServer) {
-		this.topic = topic;
-		this.consumer = KafkaConsumerFactory.getConsumer(hostServer);
-	}
+    @Autowired
+    private ConfigProperties configProperties;
 
-	@Override
-	public void run() {
-		try {
-			consumer.subscribe(Arrays.asList(topic));
-			String[] split = topic.split("_");
-			Logger logger = LoggerFactory.getLogger(split[3], split[4]);
-			log.info("准备收集项目组{}服务{}的日志",split[3], split[4]);
-			while (true) {
-				ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(200));
-				for (ConsumerRecord<String, String> record : records) {
-					logHandler(record, logger);
-				}
-			}
-		} finally {
-			consumer.close();
-		}
-	}
-
-	private void logHandler(ConsumerRecord<?, ?> record, Logger log) {
-		String logLevel = record.key().toString();
-		String logMessage = record.value().toString();
-		if (Level.INFO.toString().equals(logLevel)) {
-			log.info(logMessage);
-		} else {
-			log.error(logMessage);
-		}
-	}
+    @Bean(name = "zkClient")
+    public ZooKeeper zkClient() {
+        try {
+            ZookFactory zookFactory = new ZookFactory();
+            ZooKeeper zooKeeper = zookFactory.connection(configProperties.getZook().getServers());
+            return zooKeeper;
+        } catch (Exception e) {
+            log.error("初始化ZooKeeper连接异常:{}", e);
+        }
+        throw new RuntimeException("初始化ZooKeeper连接异常");
+    }
 
 }
